@@ -142,6 +142,16 @@ class WeDocs_Ajax {
             'order'          => 'ASC'
         ) );
 
+	    // Remove all FAQ without a parent.
+	    foreach ($docs as $index => $doc) {
+		    /**
+		     * @var WP_Post $doc
+		     */
+		    if ( empty( $doc->post_parent ) && has_term( 'faq', 'doc_tag', $doc->ID ) ) {
+			    unset( $docs[ $index ] );
+		    }
+	    }
+
         $arranged = $this->build_tree( $docs );
         usort( $arranged, array( $this, 'sort_callback' ) );
         wp_send_json_success( $arranged );
