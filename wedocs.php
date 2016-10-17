@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: weDocs
+Plugin Name: DO NOT UPDATE - weDocs
 Plugin URI: http://wedevs.com/
 Description: A documentation plugin for WordPress
 Version: 0.1
@@ -250,8 +250,54 @@ class WeDocs {
         );
 
         register_taxonomy( 'doc_tag', array( 'docs' ), $args );
-
     }
+
+	/**
+	 * Register FAQ categories taxonomy.
+	 *
+	 * @author Vova Feldman
+	 *
+	 * @return void
+	 */
+	function register_faq_categories_taxonomy(){
+		$labels = array(
+			'name'                       => _x( 'Categories', 'Taxonomy General Name', 'freemius' ),
+			'singular_name'              => _x( 'Category', 'Taxonomy Singular Name', 'freemius' ),
+			'menu_name'                  => __( 'Categories', 'freemius' ),
+			'all_items'                  => __( 'All Categories', 'freemius' ),
+			'parent_item'                => __( 'Parent Category', 'freemius' ),
+			'parent_item_colon'          => __( 'Parent Category:', 'freemius' ),
+			'new_item_name'              => __( 'New Category Name', 'freemius' ),
+			'add_new_item'               => __( 'Add New Category', 'freemius' ),
+			'edit_item'                  => __( 'Edit Category', 'freemius' ),
+			'update_item'                => __( 'Update Category', 'freemius' ),
+			'separate_items_with_commas' => __( 'Separate categories with commas', 'freemius' ),
+			'search_items'               => __( 'Search Categories', 'freemius' ),
+			'add_or_remove_items'        => __( 'Add or remove categories', 'freemius' ),
+			'choose_from_most_used'      => __( 'Choose from the most used categories', 'freemius' ),
+			'not_found'                  => __( 'Not Found', 'freemius' ),
+		);
+
+		$rewrite = array(
+			'slug'         => 'faq',
+			'with_front'   => true,
+			'hierarchical' => false,
+		);
+
+
+		$args = array(
+			'labels'            => $labels,
+			'hierarchical'      => true,
+			'public'            => true,
+			'show_ui'           => true,
+			'show_admin_column' => true,
+			'show_in_nav_menus' => true,
+			'show_tagcloud'     => false,
+			'rewrite'           => $rewrite
+		);
+
+		register_taxonomy( 'doc_category', array( 'docs' ), $args );
+	}
 
     /**
      * Register the search widget
@@ -360,6 +406,30 @@ class WeDocs {
         return $query;
     }
 
+	/**
+	 * Flush rewrites.
+	 */
+	public static function activation() {
+		wedocs()->register_post_type();
+		wedocs()->register_taxonomy();
+		wedocs()->register_faq_categories_taxonomy();
+
+		$category_all = get_term_by( 'slug', 'all', 'doc_category' );
+
+		// Create All category if not yet exist.
+		if ( false === $category_all ) {
+			wp_insert_term(
+				__( 'All', 'wedocs' ),
+				'doc_category',
+				array(
+					'slug' => 'all',
+				)
+			);
+		}
+
+	}
+
+
 } // WeDocs
 
 /**
@@ -373,3 +443,5 @@ function wedocs() {
 
 // kick it off
 wedocs();
+
+register_activation_hook( __FILE__, array( 'WeDocs', 'activation' ) );

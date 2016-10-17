@@ -28,6 +28,8 @@
                                 <span class="wedocs-btn-reorder" title="<?php esc_attr_e( 'Re-order this section', 'wedocs' ); ?>"><span class="dashicons dashicons-menu"></span></span>
                                 <a target="_blank" href="{{ viewurl }}{{section.post.id }}" title="<?php esc_attr_e( 'Preview the section', 'wedocs' ); ?>"><span class="dashicons dashicons-external"></span></a>
                                 <span class="wedocs-btn-remove" v-on:click="removeSection(section, doc.child)" title="<?php esc_attr_e( 'Delete this section', 'wedocs' ); ?>"><span class="dashicons dashicons-trash"></span></span>
+	                            <span class="wedocs-btn-visibility"  v-on:click="toggleVisibility(section,$event)" title="{{ section.post.status == 'publish' ? '<?php esc_attr_e( 'Hide from site', 'wedocs' ) ?>' : '<?php esc_attr_e( 'Make visible on site', 'wedocs' ); ?>' }}"><span class="dashicons dashicons-{{ section.post.status == 'publish' ? 'hidden' : 'visibility' }}"></span></span>
+
                                 <span class="add-article" v-on:click="addArticle(section,$event)" title="<?php esc_attr_e( 'Add a new article', 'wedocs' ); ?>"><span class="dashicons dashicons-plus-alt"></span></span>
                             </span>
                         </span>
@@ -38,8 +40,11 @@
 
                                 <span class="actions wedocs-row-actions">
                                     <span class="wedocs-btn-reorder"><span class="dashicons dashicons-menu"></span></span>
+	                                <span class="wedocs-btn-faq"  v-on:click="toggleFaq(article,$event)" title="{{ article.post.is_faq ? '<?php esc_attr_e( 'Remove from FAQ', 'wedocs' ) ?>' : '<?php esc_attr_e( 'Add to FAQ', 'wedocs' ); ?>' }}"><span class="dashicons dashicons-star-{{ article.post.is_faq ? 'filled' : 'empty' }}"></span></span>
                                     <a target="_blank" href="{{ viewurl }}{{article.post.id }}" title="<?php esc_attr_e( 'Preview the article', 'wedocs' ); ?>"><span class="dashicons dashicons-external"></span></a>
                                     <span class="wedocs-btn-remove" v-on:click="removeArticle(article, section.child)" title="<?php esc_attr_e( 'Delete this article', 'wedocs' ); ?>"><span class="dashicons dashicons-trash"></span></span>
+	                                <span class="wedocs-btn-visibility"  v-on:click="toggleVisibility(article,$event)" title="{{ article.post.status == 'publish' ? '<?php esc_attr_e( 'Hide from site', 'wedocs' ) ?>' : '<?php esc_attr_e( 'Make visible on site', 'wedocs' ); ?>' }}"><span class="dashicons dashicons-{{ article.post.status == 'publish' ? 'hidden' : 'visibility' }}"></span></span>
+
                                 </span>
                             </li>
                         </ul>

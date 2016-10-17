@@ -160,7 +160,9 @@ ul.sections .actions {
 .wedocs-btn-reorder {
   cursor: move;
 }
-.wedocs-btn-remove {
+.wedocs-btn-remove,
+.wedocs-btn-faq,
+.wedocs-btn-visibility {
   cursor: pointer;
 }
 .sweet-alert {

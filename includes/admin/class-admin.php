@@ -31,9 +31,9 @@ class WeDocs_Admin {
      * @return void
      */
     public function admin_scripts( $hook ) {
-        if ( 'toplevel_page_wedocs' != $hook ) {
-            return;
-        }
+	    if ( ! in_array( $hook, array( 'toplevel_page_wedocs', 'wedocs_page_wedocs-faq' ) ) ) {
+		    return;
+	    }
 
         $suffix     = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
         $assets_url = wedocs()->plugin_url() . '/assets';
@@ -44,11 +44,14 @@ class WeDocs_Admin {
         wp_localize_script( 'wedocs-admin-script', 'weDocs', array(
             'nonce'                 => wp_create_nonce( 'wedocs-admin-nonce' ),
             'editurl'               => admin_url( 'post.php?action=edit&post=' ),
+            'categoryEditUrl'       => admin_url( 'term.php?taxonomy=doc_category&post_type=post&tag_ID=' ),
             'viewurl'               => home_url( '/?p=' ),
             'enter_doc_title'       => __( 'Enter doc title', 'wedocs' ),
             'write_something'       => __( 'Write something', 'wedocs' ),
             'enter_section_title'   => __( 'Enter section title', 'wedocs' ),
-            
+	        // FAQ
+            'enter_faq_title'       => __( 'Enter FAQ question title', 'wedocs' ),
+            'enter_category_title'   => __( 'Enter category title', 'wedocs' ),
         ) );
 
         wp_enqueue_style( 'sweetalert', $assets_url . '/css/sweetalert.css', false, date( 'Ymd' ) );
@@ -73,6 +76,21 @@ class WeDocs_Admin {
 
         add_menu_page( __( 'weDocs', 'wedocs' ), __( 'weDocs', 'wedocs' ), 'publish_posts', 'wedocs', array( $this, 'page_index' ), 'dashicons-media-document', $this->get_menu_position() );
         add_submenu_page( 'wedocs', __( 'Docs', 'wedocs' ), __( 'Docs', 'wedocs' ), 'publish_posts', 'wedocs', array( $this, 'page_index' ) );
+
+	    /**
+	     * Add FAQ Section
+	     *
+	     * @author Vova Feldman
+	     */
+	    add_submenu_page( 'wedocs', __( 'FAQ', 'wedocs' ), __( 'FAQ', 'wedocs' ), 'publish_posts', 'wedocs-faq', array( $this, 'faq_index' ) );
+	    add_submenu_page(
+		    'wedocs',
+		    __( 'Categories', 'freemius' ),
+		    __( 'Categories', 'freemius' ),
+		    'publish_posts',
+		    'edit-tags.php?taxonomy=doc_category'
+	    );
+
         add_submenu_page( 'wedocs', __( 'Tags', 'wedocs' ), __( 'Tags', 'wedocs' ), 'publish_posts', 'edit-tags.php?taxonomy=doc_tag' );
     }
 
@@ -103,6 +121,17 @@ class WeDocs_Admin {
      */
     public function page_index() {
         include dirname( __FILE__ ) . '/template-vue.php';
+    }
+
+    /**
+     * UI FAQ handler
+     *
+     * @author Vova Feldman (@svovaf)
+     *
+     * @return void
+     */
+    public function faq_index() {
+        include dirname( __FILE__ ) . '/template-vue-faq.php';
     }
 
     /**
