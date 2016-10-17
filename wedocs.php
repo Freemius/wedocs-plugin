@@ -82,6 +82,7 @@ class WeDocs {
         // custom post types and taxonomies
         add_action( 'init', array( $this, 'register_post_type' ) );
         add_action( 'init', array( $this, 'register_taxonomy' ) );
+        add_action( 'init', array( $this, 'register_faq_categories_taxonomy' ) );
 
         // filter the search result
         add_action( 'pre_get_posts', array( $this, 'docs_search_filter' ) );
@@ -279,7 +280,7 @@ class WeDocs {
 		);
 
 		$rewrite = array(
-			'slug'         => 'faq',
+			'slug'         => 'help/faq',
 			'with_front'   => true,
 			'hierarchical' => false,
 		);
